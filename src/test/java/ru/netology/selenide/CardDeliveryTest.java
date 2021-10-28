@@ -44,7 +44,7 @@ public class CardDeliveryTest {
         $(".icon_name_calendar").click();
 
         //дата через неделю в unix-формате - как дни в календаре
-        String unixDate = String.valueOf(LocalDate.now().atStartOfDay(ZoneId.of("GMT+3")).plusDays(7).toInstant().toEpochMilli());
+        String unixDate = String.valueOf(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).plusDays(7).toInstant().toEpochMilli());
 
         //проверяем, есть ли дата на следующей строке на том же месте
         try {
