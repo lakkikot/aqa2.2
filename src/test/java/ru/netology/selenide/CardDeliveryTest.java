@@ -21,7 +21,7 @@ public class CardDeliveryTest {
     }
 
     @Test
-    void ShouldSendForm() {
+    void shouldBookMeetingAutoSet() {
         //готовим дату
         String rightDate = LocalDate.now().plusDays(4).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
@@ -31,15 +31,16 @@ public class CardDeliveryTest {
         $("[name='phone']").setValue("+79991234567");
         $(withText("Я соглашаюсь с условиями обработки и использования моих персональных данных")).click();
         $(withText("Забронировать")).click();
-        $(withText(rightDate)).shouldBe(visible, Duration.ofSeconds(15));
+        $(withText("Встреча успешно забронирована")).shouldBe(visible, Duration.ofSeconds(15));
     }
 
 
     @Test
-    void ShouldSendFormV2() throws ParseException {
+    void shouldBookMeetingByClickingCityAndDate() throws ParseException {
 
         $("[data-test-id=city] input").setValue("Са");
-        $$("[class='menu-item__control']").last().click(); //клик по последнему в списке
+       // $$("[class='menu-item__control']").last().click(); //клик по последнему в списке
+        $(withText("Саратов")).click(); //клик по нужному городу
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.DELETE); //очистить поле ввода даты
         $(".icon_name_calendar").click();
 
@@ -48,7 +49,7 @@ public class CardDeliveryTest {
 
         //проверяем, есть ли дата на следующей строке на том же месте
         try {
-            $("tr > td.calendar__day.calendar__day_type_off.calendar__day_state_today+tr").click();
+            $("[data-day='" + unixDate + "']").click();
         } catch (ElementNotFound e) {
             $("[data-step='1']").click(); //если не оказалось, то кликаем на след месяц
             $("[data-day='" + unixDate + "']").click(); //ищем нужную unix-дату
