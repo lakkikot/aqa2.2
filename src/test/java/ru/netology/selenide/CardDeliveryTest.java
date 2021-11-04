@@ -31,7 +31,7 @@ public class CardDeliveryTest {
         $("[name='phone']").setValue("+79991234567");
         $(withText("Я соглашаюсь с условиями обработки и использования моих персональных данных")).click();
         $(withText("Забронировать")).click();
-        $(withText("Встреча успешно забронирована")).shouldBe(visible, Duration.ofSeconds(15));
+        $("[data-test-id='notification'] .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldHave(exactText("Встреча успешно забронирована на " + rightDate));
     }
 
 
@@ -39,8 +39,7 @@ public class CardDeliveryTest {
     void shouldBookMeetingByClickingCityAndDate() throws ParseException {
 
         $("[data-test-id=city] input").setValue("Са");
-       // $$("[class='menu-item__control']").last().click(); //клик по последнему в списке
-        $(withText("Саратов")).click(); //клик по нужному городу
+        $$("[class='menu-item__control']").findBy(text("Саратов")).click();
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.DELETE); //очистить поле ввода даты
         $(".icon_name_calendar").click();
 
@@ -59,7 +58,11 @@ public class CardDeliveryTest {
         $("[name='phone']").setValue("+79991234567");
         $(withText("Я соглашаюсь с условиями обработки и использования моих персональных данных")).click();
         $(withText("Забронировать")).click();
-        $(withText("Встреча успешно забронирована")).shouldBe(visible, Duration.ofSeconds(15));
+
+        //дата через неделю для итоговой проверки
+        String rightDate = LocalDate.now().plusDays(7).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+
+        $("[data-test-id='notification'] .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldHave(exactText("Встреча успешно забронирована на " + rightDate));
     }
 
 
